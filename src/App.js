@@ -1,25 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { createContext, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import Home from './components/Home/Home/Home';
+import Login from './components/Login/Login';
+import AddService from './components/Dashboard/AddService/AddService';
+import OrderService from './components/Dashboard/OrderService/OrderService';
+import GetOrderService from './components/Dashboard/GetOrderService/GetOrderService';
+import AccessAdmin from './components/Dashboard/AccessAdmin/AccessAdmin';
+import ServiceList from './components/Dashboard/ServiceList/ServiceList';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import ReviewAgency from './components/Dashboard/ReviewAgency/ReviewAgency';
+import ErrorPage from './components/ErrorPage/ErrorPage';
+
+export const UserContext = createContext();
 
 function App() {
+  const [user, setUser] = useState({});
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={[user, setUser]}>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/home">
+            <Home />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <PrivateRoute path="/addService">
+            <AddService />
+          </PrivateRoute>
+          <PrivateRoute path="/order/:serviceId">
+            <OrderService />
+          </PrivateRoute>
+          <PrivateRoute path="/userService">
+            <GetOrderService />
+          </PrivateRoute>
+          <PrivateRoute path="/addAdmin">
+            <AccessAdmin />
+          </PrivateRoute>
+          <PrivateRoute path='/serviceList'>
+            <ServiceList />
+          </PrivateRoute>
+          <PrivateRoute path='/review'>
+            <ReviewAgency />
+          </PrivateRoute>
+          <Route path='*'>
+            <ErrorPage />
+          </Route>
+        </Switch>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
